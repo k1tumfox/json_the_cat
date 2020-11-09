@@ -9,12 +9,18 @@ const request = require('request');
 const fetchBreedDescription = function(catbreed, asyncReturn) {
   
   request(`https://api.thecatapi.com/v1/breeds/search?q=${catbreed}`, (error, response, body) => {
-    if (error) {
-      // console.log('Cat not found!', error);
-      asyncReturn(error, null);
-    } else if (!error) {
-      asyncReturn(null, JSON.parse(body)[0].description)
+    if (!error) {
+      if (!JSON.parse(body)[0]) {
+        asyncReturn(JSON.parse(body)[0], null);
+      } else {
+        asyncReturn(null, JSON.parse(body)[0].description)
 
+      }
+      // console.log('Cat not found!', error);
+      
+    } else {
+      console.error('error: ', error);
+      asyncReturn(error, null);
       // console.log(`${catbreed}: \n`, catInfo[0].description);
     }
   });
